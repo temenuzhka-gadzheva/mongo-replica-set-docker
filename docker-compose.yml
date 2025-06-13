@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mongo-primary:
+    image: mongo:latest
+    container_name: mongo-primary
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-primary-data:/data/db
+    networks:
+      - mongo-replica-set
+
+  mongo-secondary:
+    image: mongo:latest
+    container_name: mongo-secondary
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-secondary-data:/data/db
+    networks:
+      - mongo-replica-set
+
+  mongo-arbiter:
+    image: mongo:latest
+    container_name: mongo-arbiter
+    command: mongod --replSet rs0 --bind_ip_all
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-arbiter-data:/data/db
+    networks:
+      - mongo-replica-set
+
+volumes:
+  mongo-primary-data:
+  mongo-secondary-data:
+  mongo-arbiter-data:
+
+networks:
+  mongo-replica-set:
+    driver: bridge 
